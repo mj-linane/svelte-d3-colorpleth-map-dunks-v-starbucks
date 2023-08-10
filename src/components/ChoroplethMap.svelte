@@ -74,6 +74,7 @@
       stroke-linejoin="round"
       d={path(stateMesh)}
     />
+    <!-- This is broken in the tutorial. The first render, it will display an error because the statesFeatures isn't loaded yet. We can add in the if statement to check if it is loaded so it doesn't fail on the first render. -->
     {#if statesFeatures && Array.isArray(statesFeatures)}
       {#each statesFeatures as feature}
         <path fill="green" d={path(feature)} />
