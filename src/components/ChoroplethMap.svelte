@@ -37,7 +37,7 @@
 
   let ratios = new Map();
 
-  // in a svelte component, we need to use the onMount lifecycle method to fetch data after the component has loaded.
+  //  Fetching CSV Data with d3-fetch's d3.csv() Method in Svelte’s onMount Lifecycle Method. In a svelte component, we need to use the onMount lifecycle method to fetch data after the component has loaded.
 
   onMount(async () => {
     // parse count from csv as a number, map through both csvs
