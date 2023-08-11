@@ -17,8 +17,8 @@
     margin: {
       top: 24,
       right: 0,
-      bottom: 0,
-      left: 6,
+      left: 0,
+      bottom: 6,
     },
   };
 
