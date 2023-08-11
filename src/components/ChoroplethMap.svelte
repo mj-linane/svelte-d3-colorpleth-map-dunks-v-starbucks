@@ -28,9 +28,12 @@
   // DATA FETCHING
 
   let stateMesh = null;
-  let statesFeatures = null;
+  // ADJUST COLOR BASED ON LOCATION RATIO
+  let scale = scaleLinear<string, string>()
+    .domain([0, 1])
+    .range(["#FFFFFF", "#FFFFFF"]);
 
-  //  Fetching CSV Data with d3-fetch's d3.csv() Method in Svelte’s onMount Lifecycle Method
+  let ratios = new Map();
 
   // in a svelte component, we need to use the onMount lifecycle method to fetch data after the component has loaded.
 
@@ -59,6 +62,21 @@
     stateMesh = mesh(us, us.objects.states, (a, b) => a !== b);
 
     statesFeatures = feature(us, us.objects.states).features;
+    // rollup() method to calculate the total count for each state
+    ratios = rollup(
+      data,
+      ([v1, v2]) => v1.count / v2.count, // ratio of the two counts, first being Dunks, second being Starbucks. The higher the ratio over 1, the more Dunks there are in that state. The lower the ratio under 1, the more Starbucks there are in that state. If the ratio is 1, there are equal amounts of Dunks and Starbucks in that state.
+      (d) => d.state
+    );
+
+    // extent() method to calculate the minimum and maximum ratio values. Get the maximum location ratio from ratios via D3’s extent() method. Since the method only accepts an array as an argument, you will need to first convert the map to an array via Array.from().
+    const [, max] = extent(Array.from(ratios.values()), (ratio) => ratio);
+
+    // Then, set scale to a linear scale that maps the ratios to colors passed into the colors prop. The max value corresponds to the first color in the colors list, an orange color.
+
+    scale = scaleLinear<string, string>()
+      .domain([max, (max - 1) / 2, 1, 0.5, 0]) // 0.5 is the middle value, so it will be the middle color in the colors list, which is a brown color. 1 is the last value, so it will be the last color in the colors list, which is a green color. 0 is the first value, so it will be the first color in the colors list, which is a white color.
+      .range(colors);
   });
 </script>
 
@@ -75,10 +93,10 @@
       d={path(stateMesh)}
     />
     <!-- This is broken in the tutorial. The first render, it will display an error because the statesFeatures isn't loaded yet. We can add in the if statement to check if it is loaded so it doesn't fail on the first render. -->
-    {#if statesFeatures && Array.isArray(statesFeatures)}
-      {#each statesFeatures as feature}
-        <path fill="green" d={path(feature)} />
-      {/each}
+      <path
+        fill={scale(ratios.get(feature.properties.name))}
+        d={path(feature)}
+      />
     {/if}
   </g>
 </svg>
