@@ -43,7 +43,6 @@
     // parse count from csv as a number, map through both csvs
     // Map datasets to promises that return the parsed CSV data.
     // Run the promises with Promise.all.
-
     const counts = await Promise.all(
       datasets.map(
         async ({ url }) =>
@@ -64,6 +63,7 @@
     stateMesh = mesh(us, us.objects.states, (a, b) => a !== b);
 
     statesFeatures = feature(us, us.objects.states).features;
+
     // rollup() method to calculate the total count for each state
     ratios = rollup(
       data,
