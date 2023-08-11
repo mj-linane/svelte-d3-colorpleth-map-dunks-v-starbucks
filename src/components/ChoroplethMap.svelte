@@ -28,6 +28,8 @@
   // DATA FETCHING
 
   let stateMesh = null;
+  let statesFeatures = [];
+
   // ADJUST COLOR BASED ON LOCATION RATIO
   let scale = scaleLinear<string, string>()
     .domain([0, 1])
@@ -92,11 +94,11 @@
       stroke-linejoin="round"
       d={path(stateMesh)}
     />
-    <!-- This is broken in the tutorial. The first render, it will display an error because the statesFeatures isn't loaded yet. We can add in the if statement to check if it is loaded so it doesn't fail on the first render. -->
+    {#each statesFeatures as feature}
       <path
         fill={scale(ratios.get(feature.properties.name))}
         d={path(feature)}
       />
-    {/if}
+    {/each}
   </g>
 </svg>
