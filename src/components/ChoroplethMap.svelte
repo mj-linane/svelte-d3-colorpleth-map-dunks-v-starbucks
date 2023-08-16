@@ -5,6 +5,7 @@
   import { scaleLinear } from "d3-scale";
   import { type UsAtlas, mesh, feature } from "topojson";
   import { onMount } from "svelte";
+  import Legend from "./Legend.svelte";
 
   export let datasets = [];
   export let colors = [];
@@ -36,6 +37,9 @@
     .range(["#FFFFFF", "#FFFFFF"]);
 
   let ratios = new Map();
+
+  // LEGEND
+  let categories = datasets.map(({ label }) => label);
 
   //  Fetching CSV Data with d3-fetch's d3.csv() Method in Svelte’s onMount Lifecycle Method. In a svelte component, we need to use the onMount lifecycle method to fetch data after the component has loaded.
 
@@ -101,4 +105,5 @@
       />
     {/each}
   </g>
+  <Legend {colors} {categories} {dimensions} />
 </svg>
